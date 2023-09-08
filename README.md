@@ -1,7 +1,7 @@
 # OCR / Telegram Bot
 [![Python](https://img.shields.io/pypi/pyversions/tensorflow.svg)](https://badge.fury.io/py/tensorflow)
 
-OCR - проект созданный для распознавания текста и чисел на изображении.
+OCR - проект созданный для распознавания текста на изображении.
 
 ## Вспомогательные ресурсы и библиотеки
 - [Aiogram](https://github.com/aiogram/aiogram/tree/dev-3.x)
