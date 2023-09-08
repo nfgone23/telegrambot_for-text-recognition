@@ -29,10 +29,11 @@ class Form(StatesGroup):
 
 @dp.message(Command("start"))
 async def command_start(message: Message, state: FSMContext) -> None:
+    # Приветствие, предоставление выбора
     await state.set_state(Form.select_button)
     await message.answer(
-        f"Привет {message.from_user.first_name}. Я Ocr бот.\n"
-        "Выберите команду:",
+        f"Добро пожаловать {message.from_user.first_name}. Меня зовут Ocr бот.\n"
+        "Выберите вид распознавания:",
         reply_markup=kb.buttons
     )
 
@@ -62,7 +63,7 @@ async def recognize_numbers(message: Message, state: FSMContext) -> None:
 async def proccess_unknown_write(message: Message, state: FSMContext) -> None:
     await message.reply("I don't understand you :(")
 
-
+# Блок загрузки изображения и распознавания
 @dp.message(Form.recognize_text)
 async def recognize_photo_text(message: Message, state: FSMContext) -> None:
     await state.clear()
