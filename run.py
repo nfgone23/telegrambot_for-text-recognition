@@ -61,7 +61,7 @@ async def recognize_numbers(message: Message, state: FSMContext) -> None:
 
 @dp.message(Form.select_button)
 async def proccess_unknown_write(message: Message, state: FSMContext) -> None:
-    await message.reply("I don't understand you :(")
+    await message.reply("Я не понимаю тебя :(")
 
 # Блок загрузки изображения и распознавания
 @dp.message(Form.recognize_text)
