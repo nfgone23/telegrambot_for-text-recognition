@@ -2,8 +2,8 @@ import os
 import asyncio
 import logging
 import keras
-from dotenv import load_dotenv
 import keyboards as kb
+from dotenv import load_dotenv
 from emnistmain import letters_extract, img_letters_to_str
 from mnistmain import numbers_extract, img_numbers_to_str
 
@@ -66,6 +66,7 @@ async def proccess_unknown_write(message: Message, state: FSMContext) -> None:
 # Блок загрузки изображения и распознавания
 @dp.message(Form.recognize_text)
 async def recognize_photo_text(message: Message, state: FSMContext) -> None:
+    # Файл так как телеграм сжимает качество фото)
     await state.clear()
     document = message.document
     await bot.download(document)
@@ -75,10 +76,11 @@ async def recognize_photo_text(message: Message, state: FSMContext) -> None:
     await message.answer(
         f"Распознанный текст: {str(s_out)}."
     )
-
+    
 
 @dp.message(Form.recognize_numbers)
 async def recognize_photo_numbers(message: Message, state: FSMContext) -> None:
+    # Файл так как телеграм сжимает качество фото)
     await state.clear()
     document = message.document
     await bot.download(document)
