@@ -10,9 +10,7 @@ OCR - проект созданный для распознавания текс
 - [Opencv](https://github.com/opencv/opencv)
 - [Tensorflow](https://github.com/tensorflow/tensorflow)
 ## Перед началом обучите модели:
-Скачать базу Emnist
-
-emnistmodel.py - модель на базе Emnist (текст(EN))
+emnistmodel.py - модель на базе Emnist (текст(EN)) (Скачать базу Emnist)
 
 mnistmodel.py - модель на базе Mnist (числа)
 
