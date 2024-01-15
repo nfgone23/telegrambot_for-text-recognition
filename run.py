@@ -14,17 +14,16 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.fsm.storage.memory import MemoryStorage
 
-
 load_dotenv()
 bot = Bot(os.getenv("TOKEN"))
 dp = Dispatcher(storage=MemoryStorage())
+
 
 # хранение состояний
 class Form(StatesGroup):
     select_button = State()
     recognize_text = State()
     recognize_numbers = State()
-
 
 
 @dp.message(Command("start"))
@@ -47,7 +46,7 @@ async def recognize_text(message: Message, state: FSMContext) -> None:
         "Пришлите изображение для распознавания текста",
         reply_markup=ReplyKeyboardRemove(),
     )
-    
+
 
 @dp.message(Form.select_button, F.text.casefold() == "распознавание чисел")
 async def recognize_numbers(message: Message, state: FSMContext) -> None:
@@ -63,34 +62,40 @@ async def recognize_numbers(message: Message, state: FSMContext) -> None:
 async def proccess_unknown_write(message: Message, state: FSMContext) -> None:
     await message.reply("Я не понимаю тебя :(")
 
+
 # Блок загрузки изображения и распознавания
 @dp.message(Form.recognize_text)
 async def recognize_photo_text(message: Message, state: FSMContext) -> None:
     # Файл так как телеграм сжимает качество фото)
     await state.clear()
-    document = message.document
-    await bot.download(document)
+    file_id = message.document.file_id
+    file = await bot.get_file(file_id)
+    file_path = file.file_path
+    await bot.download_file(file_path, "image.png")
     letters_extract("image.png")
     model = keras.models.load_model("emnist_model.keras")
     s_out = img_letters_to_str(model, "image.png")
     await message.answer(
         f"Распознанный текст: {str(s_out)}."
     )
-    
 
+
+# В данный момент не работает
 @dp.message(Form.recognize_numbers)
 async def recognize_photo_numbers(message: Message, state: FSMContext) -> None:
     # Файл так как телеграм сжимает качество фото)
     await state.clear()
-    document = message.document
-    await bot.download(document)
+    file_id = message.document.file_id
+    file = await bot.get_file(file_id)
+    file_path = file.file_path
+    await bot.download_file(file_path, "image.png")
     numbers_extract("image.png")
     model = keras.models.load_model("mnist_model.keras")
     s_out = img_numbers_to_str(model, "image.png")
     await message.answer(
         f"Распознанные числа: {str(s_out)}."
     )
-    
+
 
 @dp.message(Command("cancel"))
 @dp.message(F.text.casefold() == "cancel")
@@ -99,7 +104,7 @@ async def cancel(message: Message, state: FSMContext) -> None:
     current_state = await state.get_state()
     if current_state is None:
         return
-    
+
     logging.info("Cancelling state %r", current_state)
     await state.clear()
     await message.answer(
@@ -108,7 +113,7 @@ async def cancel(message: Message, state: FSMContext) -> None:
     )
 
 
-async def main():   
+async def main():
     await dp.start_polling(bot)
 
 
